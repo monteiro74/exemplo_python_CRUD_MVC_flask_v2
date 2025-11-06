@@ -1,6 +1,7 @@
 # exemplo_python_CRUD_MVC_flask
 CRUD_MVC com FLASK
 
+![https://raw.githubusercontent.com/monteiro74/exemplo_python_CRUD_MVC_flask_v2/refs/heads/main/dashboard.png](https://raw.githubusercontent.com/monteiro74/exemplo_python_CRUD_MVC_flask_v2/refs/heads/main/dashboard.png)
 
 ✅ Estrutura Completa
 flask_app/
