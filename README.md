@@ -161,7 +161,15 @@ cd flask_app<br>
 python -m venv venv<br>
 Ativar o ambiente virtual:<br>
 # Windows<br>
+
+🎯 **Para rodar o projeto deve ativar o ambiente virtual antes !!!**
+
 venv\Scripts\activate<br>
+
+só depois é que poderá rodar o comando
+
+python run.py
+
 
 # Você verá (venv) no início da linha de comando
 
