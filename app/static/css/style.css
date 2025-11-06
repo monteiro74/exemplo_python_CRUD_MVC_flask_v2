@@ -1,0 +1,218 @@
+/* Estilos personalizados para o Sistema de Gestão Escolar */
+
+:root {
+    --primary-color: #0d6efd;
+    --secondary-color: #6c757d;
+    --success-color: #198754;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #0dcaf0;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+/* Navbar */
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.3rem;
+}
+
+/* Cards do Dashboard */
+.card {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+/* Footer */
+.footer {
+    margin-top: auto;
+}
+
+/* Tabelas */
+.table-hover tbody tr:hover {
+    background-color: rgba(0,0,0,0.03);
+}
+
+/* Badges */
+.badge {
+    padding: 0.4em 0.8em;
+}
+
+/* Botões */
+.btn {
+    transition: all 0.2s;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+/* Cards de estatísticas com cores mais escuras no footer */
+.bg-primary-dark {
+    background-color: #0a58ca !important;
+}
+
+.bg-success-dark {
+    background-color: #146c43 !important;
+}
+
+.bg-warning-dark {
+    background-color: #cc9a06 !important;
+}
+
+.bg-info-dark {
+    background-color: #0aa2c0 !important;
+}
+
+/* Foto de perfil circular */
+img.rounded-circle {
+    object-fit: cover;
+}
+
+/* Responsividade para dispositivos móveis */
+@media (max-width: 768px) {
+    .navbar-brand {
+        font-size: 1rem;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    .card-body {
+        padding: 1rem;
+    }
+}
+
+/* Animação de loading */
+.spinner-border {
+    width: 1rem;
+    height: 1rem;
+    border-width: 0.15em;
+}
+
+/* Estilo para mensagens flash */
+.alert {
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Melhorias visuais para formulários */
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+/* Tabelas responsivas */
+.table-responsive {
+    border-radius: 0.25rem;
+}
+
+/* Paginação */
+.pagination {
+    margin-top: 1rem;
+}
+
+.page-link {
+    color: var(--primary-color);
+}
+
+.page-link:hover {
+    color: var(--primary-color);
+    background-color: #e9ecef;
+}
+
+.page-item.active .page-link {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* Gráficos */
+canvas {
+    max-height: 300px;
+}
+
+/* Login page */
+.min-vh-100 {
+    min-height: 100vh;
+}
+
+/* Sombra suave nos cards */
+.shadow {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Estilo para ícones grandes */
+.bi-mortarboard-fill,
+.bi-person-plus-fill {
+    display: inline-block;
+}
+
+/* Melhorias para o dropdown */
+.dropdown-menu {
+    animation: slideDown 0.2s ease-out;
+}
+
+/* Hover effect para links da navbar */
+.nav-link:hover {
+    background-color: rgba(255,255,255,0.1);
+    border-radius: 0.25rem;
+}
+
+/* Estilo para cards de relatórios */
+.card h-100 {
+    height: 100%;
+}
+
+/* Imagem placeholder quando não há foto */
+.bg-secondary.rounded-circle {
+    font-size: 1.2rem;
+}
+
+/* Ajustes para modais */
+.modal-content {
+    border-radius: 0.5rem;
+}
+
+.modal-header {
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+}
+
+/* Cores dos badges de sexo */
+.badge.bg-primary {
+    background-color: var(--primary-color) !important;
+}
+
+.badge.bg-danger {
+    background-color: var(--danger-color) !important;
+}
+
+/* Scroll suave */
+html {
+    scroll-behavior: smooth;
+}

@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}{{ 'Editar' if pet else 'Novo' }} Pet - Sistema Escolar{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1>
+                <i class="bi bi-heart-{{ 'fill' if pet else 'half' }}"></i>
+                {{ 'Editar' if pet else 'Novo' }} Pet
+            </h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="apelido" class="form-label">Apelido *</label>
+                                <input type="text" class="form-control" id="apelido" name="apelido"
+                                       value="{{ pet.apelido if pet else '' }}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="raca" class="form-label">Raça</label>
+                                <input type="text" class="form-control" id="raca" name="raca"
+                                       value="{{ pet.raca if pet else '' }}">
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="data_nascimento" class="form-label">Data de Nascimento</label>
+                                <input type="date" class="form-control" id="data_nascimento" name="data_nascimento"
+                                       value="{{ pet.data_nascimento.strftime('%Y-%m-%d') if pet and pet.data_nascimento else '' }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="aluno_id" class="form-label">Dono (Aluno) *</label>
+                                <select class="form-select" id="aluno_id" name="aluno_id" required>
+                                    <option value="">Selecione o dono</option>
+                                    {% for aluno in alunos %}
+                                    <option value="{{ aluno.id }}"
+                                            {{ 'selected' if pet and pet.aluno_id == aluno.id else '' }}>
+                                        {{ aluno.nome }} ({{ aluno.matricula }})
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('pets.index') }}" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Voltar
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-save"></i> Salvar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-info-circle"></i> Informações</h5>
+                    <ul class="list-unstyled">
+                        <li><small>* Campos obrigatórios</small></li>
+                        <li><small>Cada pet deve ter um dono (aluno)</small></li>
+                        <li><small>A data de nascimento é opcional</small></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

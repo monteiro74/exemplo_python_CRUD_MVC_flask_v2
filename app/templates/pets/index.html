@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% block title %}Pets - Sistema Escolar{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h1><i class="bi bi-heart-fill"></i> Pets</h1>
+        </div>
+        <div class="col-md-6 text-end">
+            <a href="{{ url_for('pets.criar') }}" class="btn btn-success">
+                <i class="bi bi-plus-circle"></i> Novo Pet
+            </a>
+        </div>
+    </div>
+
+    <!-- Busca -->
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <form method="GET" action="{{ url_for('pets.index') }}">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="search" placeholder="Buscar por apelido, raça ou dono..." value="{{ search }}">
+                    <button class="btn btn-outline-secondary" type="submit">
+                        <i class="bi bi-search"></i> Buscar
+                    </button>
+                    {% if search %}
+                    <a href="{{ url_for('pets.index') }}" class="btn btn-outline-danger">
+                        <i class="bi bi-x"></i>
+                    </a>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tabela de Pets -->
+    <div class="card">
+        <div class="card-body">
+            {% if pets.items %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Apelido</th>
+                            <th>Raça</th>
+                            <th>Data Nascimento</th>
+                            <th>Dono</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pet in pets.items %}
+                        <tr>
+                            <td><i class="bi bi-heart text-danger"></i> {{ pet.apelido }}</td>
+                            <td>{{ pet.raca or '-' }}</td>
+                            <td>{{ pet.data_nascimento.strftime('%d/%m/%Y') if pet.data_nascimento else '-' }}</td>
+                            <td>
+                                <a href="{{ url_for('alunos.detalhes', id=pet.dono.id) }}">
+                                    {{ pet.dono.nome }}
+                                </a>
+                            </td>
+                            <td>
+                                <a href="{{ url_for('pets.editar', id=pet.id) }}" class="btn btn-sm btn-warning" title="Editar">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <button type="button" class="btn btn-sm btn-danger" onclick="confirmarExclusao({{ pet.id }}, '{{ pet.apelido }}')" title="Excluir">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Paginação -->
+            {% if pets.pages > 1 %}
+            <nav>
+                <ul class="pagination justify-content-center">
+                    {% if pets.has_prev %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('pets.index', page=pets.prev_num, search=search) }}">Anterior</a>
+                    </li>
+                    {% endif %}
+
+                    {% for page_num in pets.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                        {% if page_num %}
+                            {% if page_num == pets.page %}
+                            <li class="page-item active"><span class="page-link">{{ page_num }}</span></li>
+                            {% else %}
+                            <li class="page-item"><a class="page-link" href="{{ url_for('pets.index', page=page_num, search=search) }}">{{ page_num }}</a></li>
+                            {% endif %}
+                        {% else %}
+                            <li class="page-item disabled"><span class="page-link">...</span></li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if pets.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('pets.index', page=pets.next_num, search=search) }}">Próximo</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+            {% else %}
+            <p class="text-center text-muted">Nenhum pet encontrado.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Confirmação de Exclusão -->
+<div class="modal fade" id="modalExcluir" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar Exclusão</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja excluir o pet <strong id="nomePet"></strong>?</p>
+                <p class="text-danger"><small>Esta ação não pode ser desfeita.</small></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <form id="formExcluir" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">Excluir</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function confirmarExclusao(id, nome) {
+    document.getElementById('nomePet').textContent = nome;
+    document.getElementById('formExcluir').action = `/pets/excluir/${id}`;
+    new bootstrap.Modal(document.getElementById('modalExcluir')).show();
+}
+</script>
+{% endblock %}

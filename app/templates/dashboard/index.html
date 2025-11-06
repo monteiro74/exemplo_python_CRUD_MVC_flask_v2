@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Sistema Escolar{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1><i class="bi bi-speedometer2"></i> Dashboard</h1>
+            <p class="text-muted">Visão geral do sistema</p>
+        </div>
+    </div>
+
+    <!-- Cards de Estatísticas -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title">Total de Alunos</h6>
+                            <h2 class="mb-0">{{ total_alunos }}</h2>
+                        </div>
+                        <div>
+                            <i class="bi bi-people-fill" style="font-size: 3rem; opacity: 0.5;"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-primary-dark border-0">
+                    <a href="{{ url_for('alunos.index') }}" class="text-white text-decoration-none">
+                        Ver todos <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title">Total de Pets</h6>
+                            <h2 class="mb-0">{{ total_pets }}</h2>
+                        </div>
+                        <div>
+                            <i class="bi bi-heart-fill" style="font-size: 3rem; opacity: 0.5;"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-success-dark border-0">
+                    <a href="{{ url_for('pets.index') }}" class="text-white text-decoration-none">
+                        Ver todos <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title">Média de Idade</h6>
+                            <h2 class="mb-0">{{ media_idade }}</h2>
+                        </div>
+                        <div>
+                            <i class="bi bi-calendar-check" style="font-size: 3rem; opacity: 0.5;"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-warning-dark border-0">
+                    <span class="text-white">Anos</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title">Relatórios</h6>
+                            <h2 class="mb-0"><i class="bi bi-file-earmark-pdf"></i></h2>
+                        </div>
+                        <div>
+                            <i class="bi bi-graph-up" style="font-size: 3rem; opacity: 0.5;"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-info-dark border-0">
+                    <a href="{{ url_for('relatorios.index') }}" class="text-white text-decoration-none">
+                        Acessar <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gráficos -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="bi bi-bar-chart-fill"></i> Alunos por Curso</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="chartCurso"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="bi bi-pie-chart-fill"></i> Distribuição por Sexo</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="chartSexo"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Últimos Alunos Cadastrados -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="bi bi-clock-history"></i> Últimos Alunos Cadastrados</h5>
+                </div>
+                <div class="card-body">
+                    {% if ultimos_alunos %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Matrícula</th>
+                                    <th>Nome</th>
+                                    <th>Curso</th>
+                                    <th>Idade</th>
+                                    <th>Cadastrado em</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for aluno in ultimos_alunos %}
+                                <tr>
+                                    <td>{{ aluno.matricula }}</td>
+                                    <td>{{ aluno.nome }}</td>
+                                    <td>{{ aluno.curso or '-' }}</td>
+                                    <td>{{ aluno.idade or '-' }}</td>
+                                    <td>{{ aluno.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-muted text-center">Nenhum aluno cadastrado ainda.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Gráfico de Alunos por Curso
+    const ctxCurso = document.getElementById('chartCurso').getContext('2d');
+    new Chart(ctxCurso, {
+        type: 'bar',
+        data: {
+            labels: [{% for curso, total in alunos_por_curso %}'{{ curso or "Sem Curso" }}',{% endfor %}],
+            datasets: [{
+                label: 'Quantidade',
+                data: [{% for curso, total in alunos_por_curso %}{{ total }},{% endfor %}],
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Gráfico de Distribuição por Sexo
+    const ctxSexo = document.getElementById('chartSexo').getContext('2d');
+    new Chart(ctxSexo, {
+        type: 'pie',
+        data: {
+            labels: [{% for sexo, total in alunos_por_sexo %}'{{ "Masculino" if sexo == "M" else "Feminino" if sexo == "F" else "Não informado" }}',{% endfor %}],
+            datasets: [{
+                data: [{% for sexo, total in alunos_por_sexo %}{{ total }},{% endfor %}],
+                backgroundColor: [
+                    'rgba(54, 162, 235, 0.6)',
+                    'rgba(255, 99, 132, 0.6)',
+                    'rgba(255, 206, 86, 0.6)'
+                ],
+                borderColor: [
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(255, 206, 86, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+</script>
+{% endblock %}

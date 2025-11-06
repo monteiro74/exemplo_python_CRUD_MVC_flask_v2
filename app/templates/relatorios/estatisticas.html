@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+
+{% block title %}Estatísticas - Sistema Escolar{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1><i class="bi bi-graph-up"></i> Estatísticas e Gráficos</h1>
+            <p class="text-muted">Análise visual dos dados do sistema</p>
+        </div>
+    </div>
+
+    <!-- Gráficos -->
+    <div class="row mb-4">
+        <div class="col-md-6 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="bi bi-bar-chart-fill"></i> Alunos por Curso</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="chartCurso"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="bi bi-pie-chart-fill"></i> Distribuição por Sexo</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="chartSexo"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-6 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="bi bi-graph-up-arrow"></i> Distribuição por Faixa Etária</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="chartIdade"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="bi bi-heart-fill"></i> Top 10 Raças de Pets</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="chartPets"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col text-center">
+            <a href="{{ url_for('relatorios.index') }}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Voltar
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Gráfico de Alunos por Curso
+    const ctxCurso = document.getElementById('chartCurso').getContext('2d');
+    new Chart(ctxCurso, {
+        type: 'bar',
+        data: {
+            labels: [{% for curso, total in alunos_por_curso %}'{{ curso or "Sem Curso" }}',{% endfor %}],
+            datasets: [{
+                label: 'Quantidade de Alunos',
+                data: [{% for curso, total in alunos_por_curso %}{{ total }},{% endfor %}],
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            }
+        }
+    });
+
+    // Gráfico de Distribuição por Sexo
+    const ctxSexo = document.getElementById('chartSexo').getContext('2d');
+    new Chart(ctxSexo, {
+        type: 'doughnut',
+        data: {
+            labels: [{% for sexo, total in alunos_por_sexo %}'{{ "Masculino" if sexo == "M" else "Feminino" if sexo == "F" else "Não informado" }}',{% endfor %}],
+            datasets: [{
+                data: [{% for sexo, total in alunos_por_sexo %}{{ total }},{% endfor %}],
+                backgroundColor: [
+                    'rgba(54, 162, 235, 0.8)',
+                    'rgba(255, 99, 132, 0.8)',
+                    'rgba(255, 206, 86, 0.8)'
+                ],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+
+    // Gráfico de Distribuição por Idade
+    const ctxIdade = document.getElementById('chartIdade').getContext('2d');
+    new Chart(ctxIdade, {
+        type: 'bar',
+        data: {
+            labels: [{% for faixa, total in distribuicao_idade %}'{{ faixa }}',{% endfor %}],
+            datasets: [{
+                label: 'Quantidade de Alunos',
+                data: [{% for faixa, total in distribuicao_idade %}{{ total }},{% endfor %}],
+                backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            }
+        }
+    });
+
+    // Gráfico de Pets por Raça
+    const ctxPets = document.getElementById('chartPets').getContext('2d');
+    new Chart(ctxPets, {
+        type: 'horizontalBar',
+        data: {
+            labels: [{% for raca, total in pets_por_raca %}'{{ raca or "Não informado" }}',{% endfor %}],
+            datasets: [{
+                label: 'Quantidade de Pets',
+                data: [{% for raca, total in pets_por_raca %}{{ total }},{% endfor %}],
+                backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}{{ 'Editar' if aluno else 'Novo' }} Aluno - Sistema Escolar{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1>
+                <i class="bi bi-person-{{ 'fill-gear' if aluno else 'plus' }}"></i>
+                {{ 'Editar' if aluno else 'Novo' }} Aluno
+            </h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="matricula" class="form-label">Matrícula *</label>
+                                <input type="text" class="form-control" id="matricula" name="matricula"
+                                       value="{{ aluno.matricula if aluno else '' }}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="nome" class="form-label">Nome Completo *</label>
+                                <input type="text" class="form-control" id="nome" name="nome"
+                                       value="{{ aluno.nome if aluno else '' }}" required>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="curso" class="form-label">Curso</label>
+                                <input type="text" class="form-control" id="curso" name="curso"
+                                       value="{{ aluno.curso if aluno else '' }}">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="idade" class="form-label">Idade</label>
+                                <input type="number" class="form-control" id="idade" name="idade"
+                                       value="{{ aluno.idade if aluno else '' }}" min="1" max="150">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="sexo" class="form-label">Sexo</label>
+                                <select class="form-select" id="sexo" name="sexo">
+                                    <option value="">Selecione</option>
+                                    <option value="M" {{ 'selected' if aluno and aluno.sexo == 'M' }}>Masculino</option>
+                                    <option value="F" {{ 'selected' if aluno and aluno.sexo == 'F' }}>Feminino</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="foto" class="form-label">Foto</label>
+                            <input type="file" class="form-control" id="foto" name="foto" accept="image/*">
+                            <small class="text-muted">Formatos aceitos: PNG, JPG, JPEG, GIF (máx. 16MB)</small>
+
+                            {% if aluno and aluno.foto %}
+                            <div class="mt-2">
+                                <p class="mb-1">Foto atual:</p>
+                                <img src="{{ url_for('alunos.foto', id=aluno.id) }}" alt="{{ aluno.nome }}"
+                                     class="img-thumbnail" style="max-width: 200px;">
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <hr>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('alunos.index') }}" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Voltar
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save"></i> Salvar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-info-circle"></i> Informações</h5>
+                    <ul class="list-unstyled">
+                        <li><small>* Campos obrigatórios</small></li>
+                        <li><small>A matrícula deve ser única</small></li>
+                        <li><small>A foto será redimensionada automaticamente</small></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

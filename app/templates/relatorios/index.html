@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Relatórios - Sistema Escolar{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1><i class="bi bi-file-earmark-bar-graph"></i> Relatórios</h1>
+            <p class="text-muted">Selecione o tipo de relatório desejado</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-file-earmark-pdf text-danger" style="font-size: 4rem;"></i>
+                    <h5 class="card-title mt-3">Relatório de Alunos (PDF)</h5>
+                    <p class="card-text">Gera um relatório em PDF com todos os alunos cadastrados.</p>
+                    <a href="{{ url_for('relatorios.alunos_pdf') }}" class="btn btn-danger" target="_blank">
+                        <i class="bi bi-download"></i> Baixar PDF
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-graph-up text-primary" style="font-size: 4rem;"></i>
+                    <h5 class="card-title mt-3">Estatísticas e Gráficos</h5>
+                    <p class="card-text">Visualize dados estatísticos e gráficos do sistema.</p>
+                    <a href="{{ url_for('relatorios.estatisticas') }}" class="btn btn-primary">
+                        <i class="bi bi-bar-chart"></i> Ver Estatísticas
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-list-nested text-success" style="font-size: 4rem;"></i>
+                    <h5 class="card-title mt-3">Relatório Mestre-Detalhe</h5>
+                    <p class="card-text">Relatório de alunos com seus respectivos pets.</p>
+                    <a href="{{ url_for('relatorios.mestre_detalhe') }}" class="btn btn-success">
+                        <i class="bi bi-eye"></i> Visualizar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-6 mb-3">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="bi bi-download"></i> Exportação de Dados</h5>
+                </div>
+                <div class="card-body">
+                    <p>Exporte os dados para formato JSON (útil para integrações):</p>
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('alunos.exportar') }}" class="btn btn-outline-info" target="_blank">
+                            <i class="bi bi-filetype-json"></i> Exportar Alunos (JSON)
+                        </a>
+                        <a href="{{ url_for('pets.exportar') }}" class="btn btn-outline-info" target="_blank">
+                            <i class="bi bi-filetype-json"></i> Exportar Pets (JSON)
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-info-circle"></i> Sobre os Relatórios</h5>
+                    <ul>
+                        <li>Os relatórios PDF são gerados em tempo real</li>
+                        <li>Os gráficos são interativos e responsivos</li>
+                        <li>Os dados JSON podem ser importados em outras ferramentas</li>
+                        <li>Todos os relatórios respeitam os dados atuais do sistema</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

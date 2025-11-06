@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}Detalhes - {{ aluno.nome }} - Sistema Escolar{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1><i class="bi bi-person-badge"></i> Detalhes do Aluno</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 text-center mb-3">
+                            {% if aluno.foto %}
+                            <img src="{{ url_for('alunos.foto', id=aluno.id) }}" alt="{{ aluno.nome }}"
+                                 class="img-thumbnail rounded-circle" style="max-width: 200px;">
+                            {% else %}
+                            <div class="bg-secondary text-white rounded-circle d-inline-flex align-items-center justify-content-center"
+                                 style="width: 200px; height: 200px; font-size: 5rem;">
+                                <i class="bi bi-person"></i>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-8">
+                            <h3>{{ aluno.nome }}</h3>
+                            <hr>
+                            <table class="table table-borderless">
+                                <tr>
+                                    <th width="150">Matrícula:</th>
+                                    <td>{{ aluno.matricula }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Curso:</th>
+                                    <td>{{ aluno.curso or '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Idade:</th>
+                                    <td>{{ aluno.idade or '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Sexo:</th>
+                                    <td>
+                                        {% if aluno.sexo == 'M' %}
+                                        <span class="badge bg-primary">Masculino</span>
+                                        {% elif aluno.sexo == 'F' %}
+                                        <span class="badge bg-danger">Feminino</span>
+                                        {% else %}
+                                        -
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Cadastrado em:</th>
+                                    <td>{{ aluno.created_at.strftime('%d/%m/%Y %H:%M') if aluno.created_at else '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Última atualização:</th>
+                                    <td>{{ aluno.updated_at.strftime('%d/%m/%Y %H:%M') if aluno.updated_at else '-' }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pets do Aluno -->
+            <div class="card mt-3">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="bi bi-heart-fill"></i> Pets</h5>
+                    <span class="badge bg-primary">{{ aluno.pets|length }}</span>
+                </div>
+                <div class="card-body">
+                    {% if aluno.pets %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Apelido</th>
+                                    <th>Raça</th>
+                                    <th>Data Nascimento</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for pet in aluno.pets %}
+                                <tr>
+                                    <td>{{ pet.apelido }}</td>
+                                    <td>{{ pet.raca or '-' }}</td>
+                                    <td>{{ pet.data_nascimento.strftime('%d/%m/%Y') if pet.data_nascimento else '-' }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-muted text-center">Este aluno não possui pets cadastrados.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-gear"></i> Ações</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('alunos.editar', id=aluno.id) }}" class="btn btn-warning">
+                            <i class="bi bi-pencil"></i> Editar
+                        </a>
+                        <a href="{{ url_for('pets.criar') }}?aluno_id={{ aluno.id }}" class="btn btn-success">
+                            <i class="bi bi-plus-circle"></i> Adicionar Pet
+                        </a>
+                        <a href="{{ url_for('alunos.index') }}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Voltar
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

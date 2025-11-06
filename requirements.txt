@@ -1,0 +1,21 @@
+# Flask e extensões principais
+Flask>=3.0.0
+Flask-SQLAlchemy>=3.1.0
+Flask-Login>=0.6.3
+Flask-Migrate>=4.0.5
+
+# Banco de dados
+mysql-connector-python>=9.0.0
+SQLAlchemy>=2.0.35
+
+# Segurança
+Werkzeug>=3.0.0
+
+# PDF
+fpdf2>=2.8.0
+
+# Utilitários
+python-dotenv>=1.0.0
+
+# Servidor de desenvolvimento (opcional)
+gunicorn>=21.2.0
