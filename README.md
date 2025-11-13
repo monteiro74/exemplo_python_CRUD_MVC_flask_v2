@@ -13,9 +13,9 @@
     - [Banco de Dados](#banco-de-dados)
     - [Ferramentas de Desenvolvimento](#ferramentas-de-desenvolvimento)
   - [Arquitetura MVC](#arquitetura-mvc)
-    - [**Model (Modelo)**](#model-modelo)
-    - [**View (Visão)**](#view-visão)
-    - [**Controller (Controlador)**](#controller-controlador)
+    - [Model (Modelo)](#model-modelo)
+    - [View (Visão)](#view-visão)
+    - [Controller (Controlador)](#controller-controlador)
   - [Funcionalidades](#funcionalidades)
     - [Autenticação e Segurança](#autenticação-e-segurança)
     - [Dashboard Interativo](#dashboard-interativo)
@@ -119,7 +119,7 @@ Este projeto demonstra as melhores práticas de desenvolvimento web com Flask, i
 
 O projeto segue rigorosamente o padrão **MVC (Model-View-Controller)**:
 
-### **Model (Modelo)**
+### Model (Modelo)
 Localização: `app/models/`
 
 Define a estrutura de dados e lógica de negócios:
@@ -127,7 +127,7 @@ Define a estrutura de dados e lógica de negócios:
 - `aluno.py` - Modelo de alunos com validações
 - `pet.py` - Modelo de pets com relacionamento N:1 com alunos
 
-### **View (Visão)**
+### View (Visão)
 Localização: `app/templates/`
 
 Templates HTML com Jinja2 para renderização:
@@ -138,7 +138,7 @@ Templates HTML com Jinja2 para renderização:
 - `pets/` - Gerenciamento de pets
 - `relatorios/` - Visualização e geração de relatórios
 
-### **Controller (Controlador)**
+### Controller (Controlador)
 Localização: `app/routes/`
 
 Blueprints que controlam o fluxo da aplicação:
