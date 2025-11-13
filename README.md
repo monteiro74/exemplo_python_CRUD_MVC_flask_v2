@@ -1,10 +1,10 @@
-# Sistema de Gestão Escolar - Flask MVC CRUD
+# Sistema para cadastro de alunos e pets - Flask MVC CRUD
 
 ![Dashboard](https://raw.githubusercontent.com/monteiro74/exemplo_python_CRUD_MVC_flask_v2/refs/heads/main/dashboard.png)
 
 ## Índice
 
-- [Sistema de Gestão Escolar - Flask MVC CRUD](#sistema-de-gestão-escolar---flask-mvc-crud)
+- [Sistema para cadastro de alunos e pets - Flask MVC CRUD](#sistema-para-cadastro-de-alunos-e-pets---flask-mvc-crud)
   - [Índice](#índice)
   - [Sobre o Projeto](#sobre-o-projeto)
   - [Tecnologias Utilizadas](#tecnologias-utilizadas)
@@ -911,7 +911,6 @@ stateDiagram-v2
 | GET    | /relatorios/mestre-detalhe| Relatório alunos/pets      | Sim          |
 | GET    | /api/alunos/json          | Exporta JSON               | Sim          |
 
----
 
 
 ---
