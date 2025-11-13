@@ -4,18 +4,66 @@
 
 ## Índice
 
-- [Sobre o Projeto](#sobre-o-projeto)
-- [Tecnologias Utilizadas](#tecnologias-utilizadas)
-- [Arquitetura MVC](#arquitetura-mvc)
-- [Funcionalidades](#funcionalidades)
-- [Estrutura do Projeto](#estrutura-do-projeto)
-- [Pré-requisitos](#pré-requisitos)
-- [Instalação](#instalação)
-- [Configuração](#configuração)
-- [Uso](#uso)
-- [Modelos de Dados](#modelos-de-dados)
-- [Rotas e Endpoints](#rotas-e-endpoints)
-- [Capturas de Tela](#capturas-de-tela)
+- [Sistema de Gestão Escolar - Flask MVC CRUD](#sistema-de-gestão-escolar---flask-mvc-crud)
+  - [Índice](#índice)
+  - [Sobre o Projeto](#sobre-o-projeto)
+  - [Tecnologias Utilizadas](#tecnologias-utilizadas)
+    - [Backend](#backend)
+    - [Frontend](#frontend)
+    - [Banco de Dados](#banco-de-dados)
+    - [Ferramentas de Desenvolvimento](#ferramentas-de-desenvolvimento)
+  - [Arquitetura MVC](#arquitetura-mvc)
+    - [**Model (Modelo)**](#model-modelo)
+    - [**View (Visão)**](#view-visão)
+    - [**Controller (Controlador)**](#controller-controlador)
+  - [Funcionalidades](#funcionalidades)
+    - [Autenticação e Segurança](#autenticação-e-segurança)
+    - [Dashboard Interativo](#dashboard-interativo)
+    - [CRUD de Alunos](#crud-de-alunos)
+    - [CRUD de Pets](#crud-de-pets)
+    - [Sistema de Relatórios](#sistema-de-relatórios)
+    - [Interface Moderna](#interface-moderna)
+  - [Estrutura do Projeto](#estrutura-do-projeto)
+  - [Pré-requisitos](#pré-requisitos)
+    - [Verificar instalação:](#verificar-instalação)
+  - [Instalação](#instalação)
+    - [1. Clonar o repositório](#1-clonar-o-repositório)
+    - [2. Criar ambiente virtual](#2-criar-ambiente-virtual)
+    - [3. Ativar ambiente virtual](#3-ativar-ambiente-virtual)
+    - [4. Instalar dependências](#4-instalar-dependências)
+    - [5. Verificar instalação](#5-verificar-instalação)
+  - [Configuração](#configuração)
+    - [1. Criar banco de dados](#1-criar-banco-de-dados)
+    - [2. Configurar variáveis de ambiente](#2-configurar-variáveis-de-ambiente)
+    - [3. Inicializar banco de dados](#3-inicializar-banco-de-dados)
+    - [4. Criar usuário administrador](#4-criar-usuário-administrador)
+    - [5. Popular banco com dados de exemplo (opcional)](#5-popular-banco-com-dados-de-exemplo-opcional)
+  - [Uso](#uso)
+    - [Executar a aplicação](#executar-a-aplicação)
+    - [Acessar o sistema](#acessar-o-sistema)
+    - [Comandos Flask disponíveis](#comandos-flask-disponíveis)
+  - [Diagramas UML](#diagramas-uml)
+    - [Diagrama de Classes (Modelos de Dados)](#diagrama-de-classes-modelos-de-dados)
+    - [Diagrama de Sequência - Processo de Login](#diagrama-de-sequência---processo-de-login)
+    - [Diagrama de Sequência - CRUD de Aluno](#diagrama-de-sequência---crud-de-aluno)
+    - [Diagrama de Fluxo - Arquitetura MVC](#diagrama-de-fluxo---arquitetura-mvc)
+    - [Diagrama de Componentes - Estrutura da Aplicação](#diagrama-de-componentes---estrutura-da-aplicação)
+    - [Diagrama Entidade-Relacionamento (ER)](#diagrama-entidade-relacionamento-er)
+    - [Diagrama de Estados - Ciclo de Vida de uma Sessão](#diagrama-de-estados---ciclo-de-vida-de-uma-sessão)
+  - [Modelos de Dados](#modelos-de-dados)
+    - [User (Usuário)](#user-usuário)
+    - [Aluno](#aluno)
+    - [Pet](#pet)
+  - [Rotas e Endpoints](#rotas-e-endpoints)
+    - [Autenticação](#autenticação)
+    - [Dashboard](#dashboard)
+    - [Alunos](#alunos)
+    - [Pets](#pets)
+    - [Relatórios](#relatórios)
+  - [Licença](#licença)
+  - [Autor](#autor)
+  - [Contribuindo](#contribuindo)
+  - [Suporte](#suporte)
 
 ---
 
@@ -31,6 +79,9 @@ Este projeto demonstra as melhores práticas de desenvolvimento web com Flask, i
 - Interface responsiva com Bootstrap 5
 - Geração dinâmica de relatórios
 - Validação de dados e segurança
+
+
+
 
 ---
 
@@ -417,6 +468,341 @@ flask routes           # Listar todas as rotas
 
 ---
 
+## Diagramas UML
+
+### Diagrama de Classes (Modelos de Dados)
+
+```mermaid
+classDiagram
+    class User {
+        +Integer id
+        +String username
+        +String email
+        +String password_hash
+        +String nome_completo
+        +DateTime created_at
+        +set_password(password)
+        +check_password(password)
+        +is_authenticated()
+        +is_active()
+        +get_id()
+    }
+
+    class Aluno {
+        +Integer id
+        +String matricula
+        +String nome
+        +String curso
+        +Integer idade
+        +String sexo
+        +LargeBinary foto
+        +DateTime created_at
+        +DateTime updated_at
+        +to_dict()
+    }
+
+    class Pet {
+        +Integer id
+        +String apelido
+        +String raca
+        +Date data_nascimento
+        +Integer aluno_id
+        +DateTime created_at
+        +calcular_idade()
+    }
+
+    Aluno "1" --> "*" Pet : possui
+    Pet "*" --> "1" Aluno : pertence a
+```
+
+### Diagrama de Sequência - Processo de Login
+
+```mermaid
+sequenceDiagram
+    actor Usuario
+    participant Browser
+    participant Flask
+    participant Auth
+    participant DB
+    participant Session
+
+    Usuario->>Browser: Acessa /login
+    Browser->>Flask: GET /login
+    Flask->>Browser: Renderiza formulário
+
+    Usuario->>Browser: Preenche credenciais
+    Browser->>Flask: POST /login (username, password)
+    Flask->>Auth: Valida credenciais
+    Auth->>DB: Query User por username
+    DB-->>Auth: Retorna User
+    Auth->>Auth: check_password()
+
+    alt Credenciais válidas
+        Auth->>Session: login_user()
+        Session-->>Auth: Sessão criada
+        Auth-->>Flask: Sucesso
+        Flask-->>Browser: Redirect /dashboard
+        Browser-->>Usuario: Exibe dashboard
+    else Credenciais inválidas
+        Auth-->>Flask: Erro
+        Flask-->>Browser: Renderiza login com erro
+        Browser-->>Usuario: Mensagem de erro
+    end
+```
+
+### Diagrama de Sequência - CRUD de Aluno
+
+```mermaid
+sequenceDiagram
+    actor Usuario
+    participant Browser
+    participant Controller
+    participant Model
+    participant DB
+
+    rect rgb(200, 220, 250)
+        note right of Usuario: CREATE - Criar Aluno
+        Usuario->>Browser: Preenche formulário
+        Browser->>Controller: POST /alunos/criar
+        Controller->>Controller: Valida dados
+        Controller->>Model: Aluno.create()
+        Model->>DB: INSERT
+        DB-->>Model: Success
+        Model-->>Controller: Aluno criado
+        Controller-->>Browser: Redirect /alunos
+    end
+
+    rect rgb(220, 250, 220)
+        note right of Usuario: READ - Listar Alunos
+        Usuario->>Browser: Acessa /alunos
+        Browser->>Controller: GET /alunos
+        Controller->>Model: Aluno.query.all()
+        Model->>DB: SELECT *
+        DB-->>Model: Lista de alunos
+        Model-->>Controller: Retorna lista
+        Controller-->>Browser: Renderiza template
+    end
+
+    rect rgb(250, 240, 200)
+        note right of Usuario: UPDATE - Editar Aluno
+        Usuario->>Browser: Edita formulário
+        Browser->>Controller: POST /alunos/:id/atualizar
+        Controller->>Model: Aluno.update()
+        Model->>DB: UPDATE
+        DB-->>Model: Success
+        Model-->>Controller: Aluno atualizado
+        Controller-->>Browser: Redirect /alunos
+    end
+
+    rect rgb(250, 220, 220)
+        note right of Usuario: DELETE - Deletar Aluno
+        Usuario->>Browser: Confirma exclusão
+        Browser->>Controller: POST /alunos/:id/deletar
+        Controller->>Model: Aluno.delete()
+        Model->>DB: DELETE
+        DB-->>Model: Success
+        Model-->>Controller: Aluno deletado
+        Controller-->>Browser: Redirect /alunos
+    end
+```
+
+### Diagrama de Fluxo - Arquitetura MVC
+
+```mermaid
+flowchart TB
+    subgraph Browser["🌐 Cliente (Browser)"]
+        User[👤 Usuário]
+    end
+
+    subgraph Flask["🐍 Aplicação Flask"]
+        subgraph Controller["🎮 Controller (Routes/Blueprints)"]
+            AuthRoute[auth.py<br/>Login/Logout]
+            DashRoute[dashboard.py<br/>Dashboard]
+            AlunoRoute[alunos.py<br/>CRUD Alunos]
+            PetRoute[pets.py<br/>CRUD Pets]
+            RelRoute[relatorios.py<br/>Relatórios]
+        end
+
+        subgraph Model["📦 Model (ORM)"]
+            UserModel[User Model]
+            AlunoModel[Aluno Model]
+            PetModel[Pet Model]
+        end
+
+        subgraph View["🎨 View (Templates)"]
+            AuthView[auth/<br/>login.html<br/>register.html]
+            DashView[dashboard/<br/>index.html]
+            AlunoView[alunos/<br/>index.html<br/>form.html<br/>detalhes.html]
+            PetView[pets/<br/>index.html<br/>form.html]
+            RelView[relatorios/<br/>estatisticas.html]
+        end
+    end
+
+    subgraph Database["🗄️ Banco de Dados"]
+        MySQL[(MySQL/MariaDB<br/>escola_db)]
+    end
+
+    User -->|HTTP Request| Controller
+
+    AuthRoute -->|Renderiza| AuthView
+    DashRoute -->|Renderiza| DashView
+    AlunoRoute -->|Renderiza| AlunoView
+    PetRoute -->|Renderiza| PetView
+    RelRoute -->|Renderiza| RelView
+
+    AuthRoute -.->|Manipula| UserModel
+    AlunoRoute -.->|Manipula| AlunoModel
+    PetRoute -.->|Manipula| PetModel
+    DashRoute -.->|Consulta| AlunoModel
+    DashRoute -.->|Consulta| PetModel
+    RelRoute -.->|Consulta| AlunoModel
+    RelRoute -.->|Consulta| PetModel
+
+    UserModel -->|SQLAlchemy| MySQL
+    AlunoModel -->|SQLAlchemy| MySQL
+    PetModel -->|SQLAlchemy| MySQL
+
+    View -->|HTTP Response| User
+
+    style Controller fill:#e1f5ff
+    style Model fill:#fff4e1
+    style View fill:#e8f5e9
+    style Database fill:#fce4ec
+```
+
+### Diagrama de Componentes - Estrutura da Aplicação
+
+```mermaid
+flowchart LR
+    subgraph Frontend["🎨 Frontend"]
+        HTML[HTML5<br/>Templates Jinja2]
+        CSS[Bootstrap 5<br/>CSS Custom]
+        JS[JavaScript<br/>Chart.js]
+    end
+
+    subgraph Backend["⚙️ Backend"]
+        Flask[Flask 3.0<br/>Framework Web]
+
+        subgraph Extensions["🔌 Extensões"]
+            SQLAlchemy[Flask-SQLAlchemy<br/>ORM]
+            Login[Flask-Login<br/>Autenticação]
+            Migrate[Flask-Migrate<br/>Migrations]
+        end
+
+        subgraph App["📱 Aplicação"]
+            Routes[Blueprints<br/>Rotas]
+            Models[Models<br/>ORM]
+            Templates[Templates<br/>Jinja2]
+        end
+    end
+
+    subgraph Database["🗄️ Persistência"]
+        MySQL[(MySQL 8.0+<br/>MariaDB 10.6+)]
+    end
+
+    subgraph External["📄 Saída"]
+        PDF[PDF<br/>fpdf2]
+        JSON[JSON API<br/>REST]
+    end
+
+    HTML --> Flask
+    CSS --> Flask
+    JS --> Flask
+
+    Flask --> Extensions
+    Flask --> App
+
+    SQLAlchemy --> Models
+    Login --> Routes
+    Migrate --> Models
+
+    Routes --> Models
+    Models --> Templates
+
+    Models --> MySQL
+
+    Routes --> PDF
+    Routes --> JSON
+
+    style Frontend fill:#e3f2fd
+    style Backend fill:#fff3e0
+    style Database fill:#f3e5f5
+    style External fill:#e8f5e9
+```
+
+### Diagrama Entidade-Relacionamento (ER)
+
+```mermaid
+erDiagram
+    USER ||--o{ SESSION : "tem"
+    ALUNO ||--o{ PET : "possui"
+
+    USER {
+        int id PK
+        string username UK
+        string email UK
+        string password_hash
+        string nome_completo
+        datetime created_at
+    }
+
+    ALUNO {
+        int id PK
+        string matricula UK
+        string nome
+        string curso
+        int idade
+        string sexo
+        blob foto
+        datetime created_at
+        datetime updated_at
+    }
+
+    PET {
+        int id PK
+        string apelido
+        string raca
+        date data_nascimento
+        int aluno_id FK
+        datetime created_at
+    }
+
+    SESSION {
+        string session_id PK
+        int user_id FK
+        datetime expires_at
+    }
+```
+
+### Diagrama de Estados - Ciclo de Vida de uma Sessão
+
+```mermaid
+stateDiagram-v2
+    [*] --> Deslogado
+
+    Deslogado --> Autenticando : Submete login
+    Autenticando --> Logado : Credenciais válidas
+    Autenticando --> Deslogado : Credenciais inválidas
+
+    Logado --> Dashboard : Redireciona
+    Dashboard --> GerenciandoAlunos : Acessa /alunos
+    Dashboard --> GerenciandoPets : Acessa /pets
+    Dashboard --> VisualizandoRelatorios : Acessa /relatorios
+
+    GerenciandoAlunos --> Dashboard : Volta
+    GerenciandoPets --> Dashboard : Volta
+    VisualizandoRelatorios --> Dashboard : Volta
+
+    Dashboard --> Deslogado : Logout
+    GerenciandoAlunos --> Deslogado : Sessão expira
+    GerenciandoPets --> Deslogado : Sessão expira
+    VisualizandoRelatorios --> Deslogado : Sessão expira
+
+    Deslogado --> [*]
+```
+
+---
+
 ## Modelos de Dados
 
 ### User (Usuário)
@@ -527,10 +913,6 @@ flask routes           # Listar todas as rotas
 
 ---
 
-## Capturas de Tela
-
-### Dashboard
-![Dashboard com estatísticas e gráficos interativos](https://raw.githubusercontent.com/monteiro74/exemplo_python_CRUD_MVC_flask_v2/refs/heads/main/dashboard.png)
 
 ---
 
